@@ -26,6 +26,7 @@
             var url = spacesBaseUrl + spaceLabel;
 
             console.log(url);
+            console.log(openapp.resource);
 
             var deferred = $.Deferred();
             var innerDeferred = $.Deferred();
@@ -33,6 +34,7 @@
             //Delete space if already exists
             $.get(url, function(data) {
                 if (data.uri === url) {
+                    console.log("Attempting to delete existing space.");
                     openapp.resource.del(url, function() {
                         innerDeferred.resolve();
                     });
@@ -43,15 +45,15 @@
 
             //Create space
             innerDeferred.then(function() {
-                $.post(
-                        spacesBaseUrl,
-                        function(data) {
-                            deferred.resolve(data.uri);
-                        }, {
-                            "http://www.w3.org/1999/02/22-rdf-syntax-ns#predicate": "http://purl.org/role/terms/space",
-                            "http://purl.org/dc/terms/title": spaceTitle,
-                            "http://www.w3.org/2000/01/rdf-schema#label": spaceLabel
-                        }
+                openapp.resource.post(
+                    spacesBaseUrl,
+                    function(data) {
+                        deferred.resolve(data.uri);
+                    }, {
+                        "http://www.w3.org/1999/02/22-rdf-syntax-ns#predicate": "http://purl.org/role/terms/space",
+                        "http://purl.org/dc/terms/title": spaceTitle,
+                        "http://www.w3.org/2000/01/rdf-schema#label": spaceLabel
+                    }
                 );
             });
             return deferred.promise();
