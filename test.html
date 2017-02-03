@@ -31,7 +31,7 @@
             var innerDeferred = $.Deferred();
 
             //Delete space if already exists
-            openapp.resource.get(url, function(data) {
+            $.get(url, function(data) {
                 if (data.uri === url) {
                     openapp.resource.del(url, function() {
                         innerDeferred.resolve();
@@ -43,7 +43,7 @@
 
             //Create space
             innerDeferred.then(function() {
-                openapp.resource.post(
+                $.post(
                         spacesBaseUrl,
                         function(data) {
                             deferred.resolve(data.uri);
